@@ -8,13 +8,13 @@ interface MaterialState {
   updateStatus: (id: string, status: PurchaseStatus) => Promise<void>;
 }
 
-export const useMaterialStore = create<MaterialState>((set) => ({
+export const useMaterialStore = create<MaterialState>((set, get) => ({
   materials: [],
   async fetchMaterials() {
     set({ materials: await materialApi.list() });
   },
   async updateStatus(id, status) {
     await materialApi.updateStatus(id, status);
-    set((state) => ({ materials: state.materials.filter((item) => item.id !== id) }));
+    await get().fetchMaterials();
   }
 }));

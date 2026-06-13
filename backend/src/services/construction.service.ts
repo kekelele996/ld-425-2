@@ -20,7 +20,7 @@ export class ConstructionService {
     const node = await this.repo.findOneByOrFail({ id });
     node.acceptanceStatus = acceptanceStatus;
     node.acceptanceNote = acceptanceNote;
-    node.acceptancePhotoUrls = node.acceptancePhotoUrls.concat(photos);
+    node.acceptancePhotoUrls = photos;
     await this.auditLog.record({ userId, action: 'inspect_construction', entity: 'ConstructionNode', entityId: id });
     return this.repo.save(node);
   }

@@ -26,7 +26,7 @@ export class DesignService {
 
   async review(id: string, approved: boolean, comment: string, reviewerId: string) {
     const phase = await this.repo.findOneByOrFail({ id });
-    phase.status = approved ? PhaseStatus.Approved : PhaseStatus.Approved;
+    phase.status = approved ? PhaseStatus.Approved : PhaseStatus.Revision;
     phase.reviewComment = comment;
     phase.reviewerId = reviewerId;
     await this.auditLog.record({ userId: reviewerId, action: approved ? 'approve_design' : 'reject_design', entity: 'DesignPhase', entityId: id });
