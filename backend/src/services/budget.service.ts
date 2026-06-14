@@ -10,10 +10,14 @@ export class BudgetService {
   constructor(
     @InjectRepository(BudgetItem) private readonly repo: Repository<BudgetItem>,
     private readonly auditLog: AuditLogService
-  ) {}
+  ) { }
 
-  findAll() {
-    return this.repo.find({ relations: ['project'], order: { category: 'ASC' } });
+  async findAll() {
+    const items = await this.repo.find({ relations: ['project'], order: { category: 'ASC' } });
+    return items.map((item) => ({
+      ...item,
+      variance: calculateVariance(Number(item.budgetAmount), Number(item.actualCost))
+    }));
   }
 
   async adjustActualCost(id: string, actualCost: number, userId: string) {
